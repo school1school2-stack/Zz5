@@ -3,55 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاكي القدرات اللفظي - نموذج (6) - أ/ عبدالعزيز الفيفي</title>
+    <title>محاكي القدرات اللفظي - أ/ عبدالعزيز الفيفي</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
-        :root { 
-            --maroon: #800000; --gold: #d4af37; --bg: #fdfaf1; --white: #ffffff; 
-            --correct: #2e7d32; --wrong: #c62828; --matte-red: #B22222; 
-        }
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); 
-            display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; 
-        }
-        .quiz-card { 
-            background: var(--white); width: 100%; max-width: 900px; border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--maroon); 
-            padding: 30px; position: relative; 
-        }
+        :root { --maroon: #800000; --gold: #d4af37; --bg: #fdfaf1; --white: #ffffff; --correct: #2e7d32; --wrong: #c62828; --matte-red: #B22222; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; margin: 0; user-select: none; }
+        .quiz-card { background: var(--white); width: 100%; max-width: 900px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--maroon); padding: 30px; position: relative; }
         .header { text-align: center; border-bottom: 2px solid var(--gold); margin-bottom: 20px; padding-bottom: 10px; }
         .header h3, .header h4 { color: var(--matte-red); margin: 5px 0; }
-        input, select { 
-            width: 85%; padding: 14px; border-radius: 8px; border: 1.5px solid #ccc; 
-            font-size: 1.1rem; outline: none; margin-bottom: 10px; display: block; 
-            margin-left: auto; margin-right: auto; 
-        }
-        .nav-bar { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: #f4f4f4; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px; 
-        }
+        input, select { width: 85%; padding: 14px; border-radius: 8px; border: 1.5px solid #ccc; font-size: 1.1rem; outline: none; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; background: #f4f4f4; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px; }
         .q-text { font-size: 1.4rem; font-weight: bold; text-align: center; margin-bottom: 25px; line-height: 1.8; color: #222; }
-        .reading-box { 
-            background: #fff9e6; border: 1.5px solid #f0e68c; padding: 20px; 
-            border-radius: 12px; margin-bottom: 20px; line-height: 1.8; font-size: 1.1rem; text-align: justify; 
-        }
+        .reading-box { background: #fff9e6; border: 1.5px solid #f0e68c; padding: 20px; border-radius: 12px; margin-bottom: 20px; line-height: 1.8; font-size: 1.1rem; text-align: justify; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .opt { 
-            padding: 18px; border: 2px solid #ececec; border-radius: 12px; 
-            cursor: pointer; transition: 0.2s; text-align: center; font-size: 1.2rem; 
-            background: #fff; font-weight: 600; 
-        }
+        .opt { padding: 18px; border: 2px solid #ececec; border-radius: 12px; cursor: pointer; text-align: center; font-size: 1.2rem; background: #fff; font-weight: 600; }
         .opt:hover { border-color: var(--gold); background: #fffcf0; }
         .correct { background: var(--correct) !important; color: white; border-color: var(--correct) !important; }
         .wrong { background: var(--wrong) !important; color: white; border-color: var(--wrong) !important; }
-        .btn { 
-            background: var(--maroon); color: var(--gold); padding: 14px 50px; 
-            border: none; border-radius: 10px; cursor: pointer; font-size: 1.2rem; font-weight: bold; 
-        }
-        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .btn { background: var(--maroon); color: var(--gold); padding: 14px 50px; border: none; border-radius: 10px; cursor: pointer; font-size: 1.2rem; font-weight: bold; }
         .hidden { display: none !important; }
-        #lock-screen { text-align: center; padding: 50px 20px; color: var(--wrong); }
+        #lock-screen { text-align: center; padding: 40px 20px; border: 2px dashed var(--wrong); border-radius: 15px; background: #fff5f5; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -63,14 +35,16 @@
         <h2>محاكي القدرات اللفظي - نموذج (6)</h2>
     </div>
 
-    <!-- شاشة الحظر في حال التكرار -->
     <div id="lock-screen" class="hidden">
-        <h1 style="font-size: 4rem;">⚠️</h1>
-        <h2>تنبيه: محاولة مكررة</h2>
-        <p id="lock-msg">عذراً، لا يمكن إعادة الاختبار. سياسة النزاهة تمنع المحاولات المتعددة.</p>
+        <h1 style="font-size: 3rem; margin: 0;">🚫</h1>
+        <h2 style="color: var(--wrong);">محاولة تكرار الاختبار!</h2>
+        <div id="duplicate-info" style="font-size: 1.2rem; line-height: 2; color: #444;">
+            <p>عذراً، هذا الجهاز مسجل بنتيجة سابقة:</p>
+            <p id="prev-student-details" style="font-weight: bold; background: #ffebeb; padding: 15px; border-radius: 8px; border: 1px solid var(--wrong);"></p>
+        </div>
+        <p style="margin-top: 20px;">سياسة الاختبار تمنع الإعادة من نفس الجهاز لضمان نزاهة النتائج.</p>
     </div>
 
-    <!-- شاشة البداية -->
     <div id="start-page" style="text-align: center;">
         <input type="text" id="studentName" placeholder="الاسم الثلاثي">
         <select id="stageSelect" onchange="updateClasses()">
@@ -81,10 +55,9 @@
         </select>
         <select id="studentClass" class="hidden"></select>
         <button id="start-btn" class="btn" onclick="secureStart()">بدء الاختبار الآن 🚀</button>
-        <p id="checking" class="hidden" style="color: var(--maroon); font-weight: bold;">جاري التحقق من أمان الجهاز وصلاحية الدخول سحابياً...</p>
+        <p id="checking" class="hidden">جاري التحقق من هوية الجهاز...</p>
     </div>
 
-    <!-- شاشة الأسئلة -->
     <div id="quiz-page" class="hidden">
         <div class="nav-bar">
             <div id="q-counter" style="font-weight: bold;"></div>
@@ -98,7 +71,6 @@
         </div>
     </div>
 
-    <!-- شاشة النتيجة -->
     <div id="result-page" class="hidden" style="text-align: center;">
         <h2 style="color: var(--maroon);">تم الانتهاء! نتيجتك هي:</h2>
         <div style="font-size: 4rem; font-weight: bold; margin: 20px 0; color: var(--gold);" id="score-text"></div>
@@ -119,62 +91,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // بصمة الجهاز المتقدمة
-    function generateFingerprint() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.textBaseline = "top"; ctx.font = "16px 'Arial'";
-        ctx.fillText("Al-Faifi-Secure-V6", 2, 2);
-        return btoa(canvas.toDataURL()).substring(160, 210);
-    }
-    const deviceID = generateFingerprint();
-
-    // مصفوفة الأسئلة الكاملة
-    const quizData = [
-        { cat: "التناظر اللفظي", q: "نحل : خلية", opts: ["نمل : قرية", "صقر : وكر", "خيل : إسطبل", "طير : عش"], ans: "نمل : قرية" },
-        { cat: "التناظر اللفظي", q: "شمس : ضياء", opts: ["نار : حرارة", "وردة : حديقة", "قمر : ليل", "بحر : سمك"], ans: "نار : حرارة" },
-        { cat: "التناظر اللفظي", q: "غصن : شجرة", opts: ["ورقة : كتاب", "جذر : تربة", "نواة : تمرة", "فصل : سنة"], ans: "ورقة : كتاب" },
-        { cat: "التناظر اللفظي", q: "سيف : غمد", opts: ["قدم : حذاء", "خاتم : إصبع", "نظارة : وجه", "قلم : مقلمة"], ans: "قدم : حذاء" },
-        { cat: "التناظر اللفظي", q: "ثوب : خيط", opts: ["جدار : لبنة", "باب : خشب", "خاتم : ذهب", "كتاب : ورقة"], ans: "جدار : لبنة" },
-        { cat: "التناظر اللفظي", q: "بصر : عين", opts: ["شم : أنف", "سمع : أذن", "لمس : يد", "ذوق : لسان"], ans: "شم : أنف" },
-        { cat: "التناظر اللفظي", q: "نهار : عمل", opts: ["ليل : نوم", "فجر : صلاة", "صيف : سفر", "شتاء : برد"], ans: "ليل : نوم" },
-        { cat: "التناظر اللفظي", q: "طبيب : سماعة", opts: ["فلاح : محراث", "معلم : فصل", "مهندس : مصنع", "جندي : خندق"], ans: "فلاح : محراث" },
-        { cat: "التناظر اللفظي", q: "مطار : طائرات", opts: ["ميناء : سفن", "طريق : سيارات", "ملعب : لاعبون", "محطة : قطارات"], ans: "ميناء : سفن" },
-        { cat: "التناظر اللفظي", q: "عجين : خبز", opts: ["ماء : ثلج", "خشب : باب", "حديد : صلب", "نخلة : رطب"], ans: "ماء : ثلج" },
-        { cat: "إكمال الجمل", q: "إذا كنت تريد ...... السحاب، فعليك أن تترك ...... التراب.", opts: ["لمس - وطء", "رؤية - غبار", "صعود - عيش", "بلوغ - زحف"], ans: "لمس - وطء" },
-        { cat: "إكمال الجمل", q: "الابتسامة لغة ...... ، لا تحتاج إلى ...... ليفهمها الناس.", opts: ["عالمية - مترجم", "جميلة - كلام", "بسيطة - تعليم", "صامتة - وسيط"], ans: "عالمية - مترجم" },
-        { cat: "إكمال الجمل", q: "الحياة ليست ...... من المشاكل، ولكنها ...... في مواجهتها.", opts: ["خالية - مهارة", "خوفاً - شجاعة", "بعيدة - صبر", "هروباً - ذكاء"], ans: "خالية - مهارة" },
-        { cat: "إكمال الجمل", q: "من طلب ...... بغير ...... ضيع العمر في طلب المحال.", opts: ["العلم - جد", "المال - تعب", "النجاح - صبر", "الفوز - قوة"], ans: "العلم - جد" },
-        { cat: "إكمال الجمل", q: "أفضل وسيلة للتغلب على ...... هي البدء في ...... .", opts: ["الصعاب - العمل", "الخوف - الهرب", "الفشل - البكاء", "الملل - النوم"], ans: "الصعاب - العمل" },
-        { cat: "إكمال الجمل", q: "لا تقارن ...... بغيرك، بل قارن ...... بأمسك.", opts: ["نفسك - يومك", "عملك - مالك", "نجاحك - طموحك", "حظك - قدرك"], ans: "نفسك - يومك" },
-        { cat: "إكمال الجمل", q: "كن كالشجر يرميه الناس بـ ...... ويرميهم بـ ...... .", opts: ["الحجر - الثمر", "الماء - الظل", "النار - الدخان", "التراب - الورق"], ans: "الحجر - الثمر" },
-        { cat: "إكمال الجمل", q: "المصيبة ليست في وقوع ...... ، بل في الاستسلام لـ ...... .", opts: ["الخطأ - الفشل", "الألم - الحزن", "الخسارة - اليأس", "التعب - الكسل"], ans: "الخطأ - الفشل" },
-        { cat: "إكمال الجمل", q: "الإنسان الناجح هو من يغلق ...... قبل أن يغلق الناس ...... .", opts: ["فمه - آذانهم", "عينه - أبوابهم", "عقله - قلوبهم", "بيته - نوافذهم"], ans: "فمه - آذانهم" },
-        { cat: "إكمال الجمل", q: "العلم لا ينفع بغير ...... ، والعمل لا ينفع بغير ...... .", opts: ["عمل - إخلاص", "فهم - قوة", "صبر - سرعة", "مال - شهرة"], ans: "عمل - إخلاص" },
-        { cat: "الخطأ السياقي", q: "المؤمن كالغيث، أينما وقع نفع، وإذا غاب أضرّ الناس بوجوده.", opts: ["المؤمن", "نفع", "غاب", "بوجوده"], ans: "بوجوده" },
-        { cat: "الخطأ السياقي", q: "القراءة هي النافذة التي تطل منها على ظلام المعرفة.", opts: ["القراءة", "النافذة", "تطل", "ظلام"], ans: "ظلام" },
-        { cat: "الخطأ السياقي", q: "يجب عليك أن تسرع في اتخاذ القرار الصعب لكي لا تندم ببطء.", opts: ["تسرع", "القرار", "تندم", "ببطء"], ans: "تسرع" },
-        { cat: "الخطأ السياقي", q: "الأم الشجاعة هي التي تزرع الخوف في قلوب أبنائها لمواجهة الحياة.", opts: ["الشجاعة", "تزرع", "الخوف", "أبنائها"], ans: "الخوف" },
-        { cat: "الخطأ السياقي", q: "نحن لا نحصل على السلام بالحرب، بل نحصل عليه بالاستسلام.", opts: ["نحصل", "السلام", "بالحرب", "بالاستسلام"], ans: "بالاستسلام" },
-        { cat: "الخطأ السياقي", q: "الصدق طمأنينة والكذب ريبة، فاحرص على الكذب لترتاح.", opts: ["الصدق", "الكذب", "فاحرص", "لترتاح"], ans: "فاحرص" },
-        { cat: "الخطأ السياقي", q: "الرياضة تقوي العضلات وتزيد من خمول الجسم ونشاطه.", opts: ["تقوي", "العضلات", "خمول", "نشاطه"], ans: "خمول" },
-        { cat: "الخطأ السياقي", q: "المتواضع هو الشخص الذي يرى الناس أكبر منه لكي يرى نفسه صغيراً.", opts: ["المتواضع", "يرى", "أكبر", "صغيراً"], ans: "صغيراً" },
-        { cat: "الخطأ السياقي", q: "الشمس تشرق لتعطي الأرض الظلام والدفء والضياء.", opts: ["تشرق", "الأرض", "الظلام", "الضياء"], ans: "الظلام" },
-        { cat: "الخطأ السياقي", q: "الوقت كالماء، إن لم تقطعه بالسكين قطعك بالسيف.", opts: ["كالماء", "تقطعه", "بالسكين", "قطعك"], ans: "كالماء" },
-        { cat: "استيعاب المقروء", passage: "تعد النخلة في شبه الجزيرة العربية رمزاً للعطاء والصمود...", q: "يستنتج من النص أن علاقة النخلة بالبيئة الصحراوية هي علاقة:", opts: ["تضاد وصراع", "تكيف وصمود", "ضعف واندثار", "حاجة دائمة للماء"], ans: "تكيف وصمود" },
-        { cat: "استيعاب المقروء", passage: "أثبتت الدراسات الحديثة أن النوم المبكر يحسن الذاكرة...", q: "وفقاً للنص، أي من الفوائد التالية لم تذكر للنوم المبكر؟", opts: ["تحسين الذاكرة", "تعزيز المناعة", "زيادة الطول", "تقليل التوتر"], ans: "زيادة الطول" },
-        { cat: "استيعاب المقروء", passage: "تعتبر اللغة العربية من أغنى لغات العالم...", q: "السبب الرئيسي في بقاء اللغة العربية حية هو:", opts: ["كثرة المترادفات", "ارتباطها بالقرآن", "جمال خطوطها", "سهولة تعلمها"], ans: "ارتباطها بالقرآن" },
-        { cat: "استيعاب المقروء", passage: "المملكة تشهد نهضة شاملة في رؤية 2030...", q: "تركز رؤية المملكة كما ورد في النص بشكل أساسي على:", opts: ["الخدمات التقليدية", "الاستثمار البشري والتقني", "الاستيراد الخارجي", "البناء العمراني فقط"], ans: "الاستثمار البشري والتقني" },
-        { cat: "استيعاب المقروء", passage: "تحتاج الغابات إلى حماية مستمرة...", q: "الدور البيئي الأهم للغابات كما يوضحه النص هو:", opts: ["منع الزحف العمراني", "موازنة المناخ والأكسجين", "توفير الأخشاب", "منع الحرائق"], ans: "موازنة المناخ والأكسجين" },
-        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (أسد - صقر - نمر - فهد)", opts: ["أسد", "صقر", "نمر", "فهد"], ans: "صقر" },
-        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (الرياض - جدة - الدمام - القاهرة)", opts: ["الرياض", "جدة", "الدمام", "القاهرة"], ans: "القاهرة" },
-        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (شتاء - ربيع - نهار - خريف)", opts: ["شتاء", "ربيع", "نهار", "خريف"], ans: "نهار" },
-        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (قلم - ممحاة - سبورة - تفاحة)", opts: ["قلم", "ممحاة", "سبورة", "تفاحة"], ans: "تفاحة" },
-        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (بترول - ذهب - حديد - نحاس)", opts: ["بترول", "ذهب", "حديد", "نحاس"], ans: "بترول" }
-    ];
-
-    let currentIdx = 0, userScore = 0, timer, sName, sClass;
-
     function updateClasses() {
         const stage = document.getElementById('stageSelect').value;
         const classSelect = document.getElementById('studentClass');
@@ -190,6 +106,59 @@
         }
     }
 
+    function generateAdvancedFingerprint() {
+        const screenSpecs = window.screen.width + "x" + window.screen.height + "-" + window.screen.colorDepth;
+        const hardwareSpecs = navigator.hardwareConcurrency + "-" + (navigator.deviceMemory || "unknown");
+        const platform = navigator.platform;
+        return btoa(screenSpecs + hardwareSpecs + platform).substring(0, 50);
+    }
+    const deviceID = generateAdvancedFingerprint();
+
+    const quizData = [
+        { cat: "التناظر اللفظي", q: "نحل : خلية", opts: ["نمل : قرية", "صقر : وكر", "خيل : إسطبل", "طير : عش"], ans: "نمل : قرية", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "شمس : ضياء", opts: ["نار : حرارة", "وردة : حديقة", "قمر : ليل", "بحر : سمك"], ans: "نار : حرارة", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "غصن : شجرة", opts: ["ورقة : كتاب", "جذر : تربة", "نواة : تمرة", "فصل : سنة"], ans: "ورقة : كتاب", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "سيف : غمد", opts: ["قدم : حذاء", "خاتم : إصبع", "نظارة : وجه", "قلم : مقلمة"], ans: "قدم : حذاء", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "ثوب : خيط", opts: ["جدار : لبنة", "باب : خشب", "خاتم : ذهب", "كتاب : ورقة"], ans: "جدار : لبنة", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "بصر : عين", opts: ["شم : أنف", "سمع : أذن", "لمس : يد", "ذوق : لسان"], ans: "شم : أنف", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "نهار : عمل", opts: ["ليل : نوم", "فجر : صلاة", "صيف : سفر", "شتاء : برد"], ans: "ليل : نوم", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "طبيب : سماعة", opts: ["فلاح : محراث", "معلم : فصل", "مهندس : مصنع", "جندي : خندق"], ans: "فلاح : محراث", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "مطار : طائرات", opts: ["ميناء : سفن", "طريق : سيارات", "ملعب : لاعبون", "محطة : قطارات"], ans: "ميناء : سفن", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "التناظر اللفظي", q: "عجين : خبز", opts: ["ماء : ثلج", "خشب : باب", "حديد : صلب", "نخلة : رطب"], ans: "ماء : ثلج", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "إذا كنت تريد ...... السحاب، فعليك أن تترك ...... التراب.", opts: ["لمس - وطء", "رؤية - غبار", "صعود - عيش", "بلوغ - زحف"], ans: "لمس - وطء", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "الابتسامة لغة ...... ، لا تحتاج إلى ...... ليفهمها الناس.", opts: ["عالمية - مترجم", "جميلة - كلام", "بسيطة - تعليم", "صامتة - وسيط"], ans: "عالمية - مترجم", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "الحياة ليست ...... من المشاكل، ولكنها ...... في مواجهتها.", opts: ["خالية - مهارة", "خوفاً - شجاعة", "بعيدة - صبر", "هروباً - ذكاء"], ans: "خالية - مهارة", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "من طلب ...... بغير ...... ضيع العمر في طلب المحال.", opts: ["العلم - جد", "المال - تعب", "النجاح - صبر", "الفوز - قوة"], ans: "العلم - جد", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "أفضل وسيلة للتغلب على ...... هي البدء في ...... .", opts: ["الصعاب - العمل", "الخوف - الهرب", "الفشل - البكاء", "الملل - النوم"], ans: "الصعاب - العمل", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "لا تقارن ...... بغيرك، بل قارن ...... بأمسك.", opts: ["نفسك - يومك", "عملك - مالك", "نجاحك - طموحك", "حظك - قدرك"], ans: "نفسك - يومك", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "كن كالشجر يرميه الناس بـ ...... ويرميهم بـ ...... .", opts: ["الحجر - الثمر", "الماء - الظل", "النار - الدخان", "التراب - الورق"], ans: "الحجر - الثمر", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "المصيبة ليست في وقوع ...... ، بل في الاستسلام لـ ...... .", opts: ["الخطأ - الفشل", "الألم - الحزن", "الخسارة - اليأس", "التعب - الكسل"], ans: "الخطأ - الفشل", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "الإنسان الناجح هو من يغلق ...... قبل أن يغلق الناس ...... .", opts: ["فمه - آذانهم", "عينه - أبوابهم", "عقله - قلوبهم", "بيته - نوافذهم"], ans: "فمه - آذانهم", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "إكمال الجمل", q: "العلم لا ينفع بغير ...... ، والعمل لا ينفع بغير ...... .", opts: ["عمل - إخلاص", "فهم - قوة", "صبر - سرعة", "مال - شهرة"], ans: "عمل - إخلاص", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "المؤمن كالغيث، أينما وقع نفع، وإذا غاب أضرّ الناس بوجوده.", opts: ["المؤمن", "نفع", "غاب", "بوجوده"], ans: "بوجوده", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "القراءة هي النافذة التي تطل منها على ظلام المعرفة.", opts: ["القراءة", "النافذة", "تطل", "ظلام"], ans: "ظلام", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "يجب عليك أن تسرع في اتخاذ القرار الصعب لكي لا تندم ببطء.", opts: ["تسرع", "القرار", "تندم", "ببطء"], ans: "تسرع", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "الأم الشجاعة هي التي تزرع الخوف في قلوب أبنائها لمواجهة الحياة.", opts: ["الشجاعة", "تزرع", "الخوف", "أبنائها"], ans: "الخوف", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "نحن لا نحصل على السلام بالحرب، بل نحصل عليه بالاستسلام.", opts: ["نحصل", "السلام", "بالحرب", "بالاستسلام"], ans: "بالاستسلام", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "الصدق طمأنينة والكذب ريبة، فاحرص على الكذب لترتاح.", opts: ["الصدق", "الكذب", "فاحرص", "لترتاح"], ans: "فاحرص", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "الرياضة تقوي العضلات وتزيد من خمول الجسم ونشاطه.", opts: ["تقوي", "العضلات", "خمول", "نشاطه"], ans: "خمول", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "المتواضع هو الشخص الذي يرى الناس أكبر منه لكي يرى نفسه صغيراً.", opts: ["المتواضع", "يرى", "أكبر", "صغيراً"], ans: "صغيراً", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "الشمس تشرق لتعطي الأرض الظلام والدفء والضياء.", opts: ["تشرق", "الأرض", "الظلام", "الضياء"], ans: "الظلام", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "الخطأ السياقي", q: "الوقت كالماء، إن لم تقطعه بالسكين قطعك بالسيف.", opts: ["كالماء", "تقطعه", "بالسكين", "قطعك"], ans: "كالماء", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "استيعاب المقروء", passage: "تعد النخلة في شبه الجزيرة العربية رمزاً للعطاء والصمود، فهي شجرة مباركة تستطيع تحمل أقسى الظروف المناخية من حرارة شديدة وجفاف.", q: "يستنتج من النص أن علاقة النخلة بالبيئة الصحراوية هي علاقة:", opts: ["تضاد وصراع", "تكيف وصمود", "ضعف واندثار", "حاجة دائمة للماء"], ans: "تكيف وصمود", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "استيعاب المقروء", passage: "أثبتت الدراسات الحديثة أن النوم المبكر لساعات كافية يؤدي إلى تحسين الذاكرة وزيادة القدرة على التركيز لدى الطلاب.", q: "وفقاً للنص، أي من الفوائد التالية لم تذكر للنوم المبكر؟", opts: ["تحسين الذاكرة", "تعزيز المناعة", "زيادة الطول", "تقليل التوتر"], ans: "زيادة الطول", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "استيعاب المقروء", passage: "تعتبر اللغة العربية من أغنى لغات العالم بالمفردات، وهي لغة حية حافظت على كيانها بفضل القرآن الكريم.", q: "السبب الرئيسي في بقاء اللغة العربية حية لفترة طويلة هو:", opts: ["كثرة المترادفات", "ارتباطها بالقرآن", "جمال خطوطها", "سهولة تعلمها"], ans: "ارتباطها بالقرآن", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "استيعاب المقروء", passage: "المملكة العربية السعودية تشهد نهضة شاملة، حيث تركز رؤية 2030 على الاستثمار في العقول الشابة وتطوير البنية الرقمية.", q: "تركز رؤية المملكة كما ورد في النص بشكل أساسي على:", opts: ["الخدمات التقليدية", "الاستثمار البشري والتقني", "الاستيراد الخارجي", "البناء العمراني فقط"], ans: "الاستثمار البشري والتقني", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "استيعاب المقروء", passage: "تحتاج الغابات إلى حماية مستمرة، فهي مخازن حيوية للكربون ومصدر للأكسجين، وتوازن البيئة.", q: "الدور البيئي الأهم للغابات كما يوضحه النص هو:", opts: ["منع الزحف العمراني", "موازنة المناخ والأكسجين", "توفير الأخشاب", "منع الحرائق"], ans: "موازنة المناخ والأكسجين", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (أسد - صقر - نمر - فهد)", opts: ["أسد", "صقر", "نمر", "فهد"], ans: "صقر", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (الرياض - جدة - الدمام - القاهرة)", opts: ["الرياض", "جدة", "الدمام", "القاهرة"], ans: "القاهرة", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (شتاء - ربيع - نهار - خريف)", opts: ["شتاء", "ربيع", "نهار", "خريف"], ans: "نهار", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (قلم - ممحاة - سبورة - تفاحة)", opts: ["قلم", "ممحاة", "سبورة", "تفاحة"], ans: "تفاحة", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" },
+        { cat: "المفردة الشاذة", q: "حدد المفردة الشاذة: (بترول - ذهب - حديد - نحاس)", opts: ["بترول", "ذهب", "حديد", "نحاس"], ans: "بترول", tip: "✨ أ / عبد العزيز الفيفي - ثانوية الأمير عبدالمجيد 🎓" }
+    ];
+
+    let currentIdx = 0, userScore = 0, timer, sName, sClass;
+
     async function secureStart() {
         const nameInput = document.getElementById('studentName').value.trim();
         const classInput = document.getElementById('studentClass').value;
@@ -199,32 +168,25 @@
         document.getElementById('start-btn').disabled = true;
         document.getElementById('checking').classList.remove('hidden');
 
-        try {
-            // التحقق السحابي المزدوج (الاسم والبصمة)
-            const deviceSnapshot = await db.collection("student_results")
-                .where("model_id", "==", currentModelId)
-                .where("deviceID", "==", deviceID).get();
+        const snapshot = await db.collection("student_results")
+                        .where("deviceID", "==", deviceID)
+                        .where("model_id", "==", currentModelId)
+                        .get();
 
-            const nameSnapshot = await db.collection("student_results")
-                .where("model_id", "==", currentModelId)
-                .where("name", "==", nameInput).get();
-
-            if(!deviceSnapshot.empty || !nameSnapshot.empty) {
-                document.getElementById('start-page').innerHTML = ""; // مسح كامل للواجهة لمنع التلاعب
-                document.getElementById('lock-screen').classList.remove('hidden');
-                if(!nameSnapshot.empty) document.getElementById('lock-msg').innerText = "هذا الاسم قام بأداء الاختبار مسبقاً.";
-                return;
-            }
-
-            sName = nameInput; sClass = classInput;
+        if(!snapshot.empty) {
+            const oldData = snapshot.docs[0].data();
+            const date = oldData.time ? oldData.time.toDate().toLocaleString('ar-SA') : 'تاريخ سابق';
             document.getElementById('start-page').classList.add('hidden');
-            document.getElementById('quiz-page').classList.remove('hidden');
-            loadQuestion();
-
-        } catch (e) {
-            alert("حدث خطأ في الاتصال، حاول مرة أخرى.");
-            document.getElementById('start-btn').disabled = false;
+            document.getElementById('lock-screen').classList.remove('hidden');
+            document.getElementById('prev-student-details').innerHTML = 
+                `الطالب: ${oldData.name} <br> الفصل: ${oldData.student_class} <br> التاريخ: ${date}`;
+            return;
         }
+
+        sName = nameInput; sClass = classInput;
+        document.getElementById('start-page').classList.add('hidden');
+        document.getElementById('quiz-page').classList.remove('hidden');
+        loadQuestion();
     }
 
     function loadQuestion() {
@@ -237,7 +199,6 @@
         document.getElementById('question-text').innerText = data.q;
         document.getElementById('next-btn').classList.add('hidden');
         const box = document.getElementById('options-area'); box.innerHTML = '';
-        
         [...data.opts].sort(() => Math.random()-0.5).forEach(o => {
             const d = document.createElement('div'); d.className = 'opt'; d.innerText = o;
             d.onclick = () => {
@@ -270,11 +231,9 @@
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
         document.getElementById('score-text').innerText = `${userScore} / ${quizData.length}`;
-        
         await db.collection("student_results").add({
-            name: sName, student_class: sClass, score: userScore, 
-            total: quizData.length, model_id: currentModelId, 
-            deviceID: deviceID, time: firebase.firestore.FieldValue.serverTimestamp()
+            name: sName, student_class: sClass, score: userScore, total: quizData.length,
+            model_id: currentModelId, deviceID: deviceID, time: firebase.firestore.FieldValue.serverTimestamp()
         });
     }
 </script>
